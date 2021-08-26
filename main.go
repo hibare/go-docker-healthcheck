@@ -13,8 +13,12 @@ func main() {
 		os.Exit(1)
 	}
 	url := os.Args[1]
-	fmt.Println(url)
-	if _, err := http.Get(url); err != nil {
+	fmt.Printf("Checking URL %s\n", url)
+
+	resp, err := http.Get(url)
+
+	if err != nil || resp.StatusCode != 200 {
 		os.Exit(1)
 	}
+	os.Exit(0)
 }
