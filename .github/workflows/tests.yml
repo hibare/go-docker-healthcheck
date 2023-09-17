@@ -21,5 +21,8 @@ jobs:
         with:
           go-version: "stable"
 
+      - name: Go vet
+        run: go vet ./...
+
       - name: Go Test
         run: go test -v -cover ./...
