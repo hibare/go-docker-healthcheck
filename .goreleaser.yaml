@@ -1,5 +1,5 @@
 source:
-  enabled: true
+  enabled: false
   name_template: "{{ .ProjectName }}-{{ .Version }}"
 
 before:
