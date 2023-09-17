@@ -1,0 +1,39 @@
+source:
+  enabled: true
+  name_template: "{{ .ProjectName }}-{{ .Version }}"
+
+before:
+  hooks:
+    - go mod tidy
+    - go vet ./...
+    - go test -v -cover ./...
+
+builds:
+  - binary: "healthcheck"
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - "386"
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - "6"
+      - "7"
+    ldflags:
+      - -s -w -X github.com/hibare/go-docker-healthcheck/internal/version.Version={{.Version}}
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
