@@ -36,6 +36,7 @@ parse_args() {
   shift $((OPTIND - 1))
   TAG=$1
 }
+
 # this function wraps all the destructive operations
 # if a curl|bash cuts off the end of the script due to
 # network, either nothing will happen or will syntax error
@@ -49,28 +50,29 @@ execute() {
   srcdir="${tmpdir}"
   (cd "${tmpdir}" && untar "${TARBALL}")
   test ! -d "${BINDIR}" && install -d "${BINDIR}"
-  for binexe in $BINARIES; do
-    if [ "$OS" = "windows" ]; then
-      binexe="${binexe}.exe"
-    fi
-    install "${srcdir}/${binexe}" "${BINDIR}/"
-    log_info "installed ${BINDIR}/${binexe}"
-  done
+  binexe=$BINARY
+  if [ "$OS" = "windows" ]; then
+    binexe="${binexe}.exe"
+  fi
+  install "${srcdir}/${binexe}" "${BINDIR}/"
+  log_info "installed ${BINDIR}/${binexe}"
   rm -rf "${tmpdir}"
 }
-get_binaries() {
+
+get_binary() {
   case "$PLATFORM" in
-    linux/386) BINARIES="healthcheck" ;;
-    linux/amd64) BINARIES="healthcheck" ;;
-    linux/arm64) BINARIES="healthcheck" ;;
-	linux/armv6) BINARIES="healthcheck" ;;
-    linux/armv7) BINARIES="healthcheck" ;;
+    linux/386) BINARY="healthcheck" ;;
+    linux/amd64) BINARY="healthcheck" ;;
+    linux/arm64) BINARY="healthcheck" ;;
+	  linux/armv6) BINARY="healthcheck" ;;
+    linux/armv7) BINARY="healthcheck" ;;
     *)
       log_crit "platform $PLATFORM is not supported.  Make sure this script is up-to-date and file request at https://github.com/${PREFIX}/issues/new"
       exit 1
       ;;
   esac
 }
+
 tag_to_version() {
   if [ -z "${TAG}" ]; then
     log_info "checking GitHub for latest tag"
@@ -87,14 +89,6 @@ tag_to_version() {
   VERSION=${TAG#v}
 }
 
-adjust_os() {
-  # adjust archive name based on OS
-  case ${OS} in
-    linux) OS=linux ;;
-  esac
-  true
-}
-
 cat /dev/null <<EOF
 ------------------------------------------------------------------------
 https://github.com/client9/shlib - portable posix shell functions
@@ -103,19 +97,21 @@ https://github.com/client9/shlib/blob/master/LICENSE.md
 but credit (and pull requests) appreciated.
 ------------------------------------------------------------------------
 EOF
+
 is_command() {
   command -v "$1" >/dev/null
 }
+
 echoerr() {
   echo "$@" 1>&2
 }
-log_prefix() {
-  echo "$0"
-}
+
 _logp=6
+
 log_set_priority() {
   _logp="$1"
 }
+
 log_priority() {
   if test -z "$1"; then
     echo "$_logp"
@@ -123,6 +119,7 @@ log_priority() {
   fi
   [ "$1" -le "$_logp" ]
 }
+
 log_tag() {
   case $1 in
     0) echo "emerg" ;;
@@ -136,22 +133,27 @@ log_tag() {
     *) echo "$1" ;;
   esac
 }
+
 log_debug() {
   log_priority 7 || return 0
   echo "$(log_prefix)" "$(log_tag 7)" "$@"
 }
+
 log_info() {
   log_priority 6 || return 0
   echo "$(log_prefix)" "$(log_tag 6)" "$@"
 }
+
 log_err() {
   log_priority 3 || return 0
   echoerr "$(log_prefix)" "$(log_tag 3)" "$@"
 }
+
 log_crit() {
   log_priority 2 || return 0
   echoerr "$(log_prefix)" "$(log_tag 2)" "$@"
 }
+
 uname_os() {
   os=$(uname -s | tr '[:upper:]' '[:lower:]')
   case "$os" in
@@ -161,6 +163,7 @@ uname_os() {
   esac
   echo "$os"
 }
+
 uname_arch() {
   arch=$(uname -m)
   case $arch in
@@ -177,6 +180,7 @@ uname_arch() {
   esac
   echo ${arch}
 }
+
 uname_os_check() {
   os=$(uname_os)
   case "$os" in
@@ -195,6 +199,7 @@ uname_os_check() {
   log_crit "uname_os_check '$(uname -s)' got converted to '$os' which is not a GOOS value. Please file bug at https://github.com/client9/shlib"
   return 1
 }
+
 uname_arch_check() {
   arch=$(uname_arch)
   case "$arch" in
@@ -216,6 +221,7 @@ uname_arch_check() {
   log_crit "uname_arch_check '$(uname -m)' got converted to '$arch' which is not a GOARCH value.  Please file bug report at https://github.com/client9/shlib"
   return 1
 }
+
 untar() {
   tarball=$1
   case "${tarball}" in
@@ -228,6 +234,7 @@ untar() {
       ;;
   esac
 }
+
 http_download_curl() {
   local_file=$1
   source_url=$2
@@ -243,6 +250,7 @@ http_download_curl() {
   fi
   return 0
 }
+
 http_download_wget() {
   local_file=$1
   source_url=$2
@@ -253,6 +261,7 @@ http_download_wget() {
     wget -q --header "$header" -O "$local_file" "$source_url"
   fi
 }
+
 http_download() {
   log_debug "http_download $2"
   if is_command curl; then
@@ -265,6 +274,7 @@ http_download() {
   log_crit "http_download unable to find wget or curl"
   return 1
 }
+
 http_copy() {
   tmp=$(mktemp)
   http_download "${tmp}" "$1" "$2" || return 1
@@ -272,6 +282,7 @@ http_copy() {
   rm -f "${tmp}"
   echo "$body"
 }
+
 github_release() {
   owner_repo=$1
   version=$2
@@ -283,6 +294,7 @@ github_release() {
   test -z "$version" && return 1
   echo "$version"
 }
+
 hash_sha256() {
   TARGET=${1:-/dev/stdin}
   if is_command gsha256sum; then
@@ -302,6 +314,7 @@ hash_sha256() {
     return 1
   fi
 }
+
 hash_sha256_verify() {
   TARGET=$1
   checksums=$2
@@ -321,6 +334,7 @@ hash_sha256_verify() {
     return 1
   fi
 }
+
 cat /dev/null <<EOF
 ------------------------------------------------------------------------
 End of functions from https://github.com/client9/shlib
@@ -340,6 +354,7 @@ PREFIX="$OWNER/$REPO"
 log_prefix() {
 	echo "$PREFIX"
 }
+
 PLATFORM="${OS}/${ARCH}"
 GITHUB_DOWNLOAD=https://github.com/${OWNER}/${REPO}/releases/download
 
@@ -348,11 +363,9 @@ uname_arch_check "$ARCH"
 
 parse_args "$@"
 
-get_binaries
+get_binary
 
 tag_to_version
-
-adjust_os
 
 log_info "found version: ${VERSION} for ${TAG}/${OS}/${ARCH}"
 
