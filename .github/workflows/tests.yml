@@ -35,6 +35,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Cosign install
+        uses: sigstore/cosign-installer@4a861528be5e691840a69536975ada1d4c30349d
+
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
