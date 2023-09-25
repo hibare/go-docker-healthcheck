@@ -1,4 +1,4 @@
-name: goreleaser
+name: Test &/ Release
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ on:
     tags:
       - "*"
 jobs:
-  goreleaser:
+  TestRelease:
     permissions:
       contents: write
       id-token: write
