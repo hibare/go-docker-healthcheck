@@ -37,6 +37,6 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: ${{ github.event_name == 'pull_request' && 'release --skip=sign,publish --snapshot --clean' || 'release --clean' }}
+          args: ${{ github.event_name == 'pull_request' && 'build --snapshot --clean' || 'release --clean' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
