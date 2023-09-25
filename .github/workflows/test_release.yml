@@ -1,13 +1,21 @@
-name: goreleaser
+name: Test - Release
 
 on:
+  pull_request:
+    branches:
+      - "main"
+      - "dev"
+    paths-ignore:
+      - "**/README.md"
+      - "**/.github"
   push:
     tags:
       - "*"
 jobs:
-  goreleaser:
+  TestRelease:
     permissions:
       contents: write
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,16 +26,17 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: "stable"
+          go-version-file: go.mod
 
       - name: Cosign install
-        uses: sigstore/cosign-installer@4a861528be5e691840a69536975ada1d4c30349d
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: sigstore/cosign-installer@v3.1.1
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser
           version: latest
-          args: release --clean
+          args: ${{ github.event_name == 'pull_request' && 'release --skip=sign,publish --snapshot --clean' || 'release --clean' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
