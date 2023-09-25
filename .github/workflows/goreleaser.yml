@@ -22,7 +22,7 @@ jobs:
           go-version-file: go.mod
 
       - name: Cosign install
-        uses: sigstore/cosign-installer@4a861528be5e691840a69536975ada1d4c30349d
+        uses: sigstore/cosign-installer@v3.1.1
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
