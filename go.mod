@@ -3,7 +3,7 @@ module github.com/hibare/go-docker-healthcheck
 go 1.21
 
 require (
-	github.com/hibare/GoCommon/v2 v2.3.0
+	github.com/hibare/GoCommon/v2 v2.4.0
 	github.com/rs/zerolog v1.30.0
 	github.com/spf13/cobra v1.7.0
 )
