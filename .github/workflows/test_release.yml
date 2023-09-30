@@ -30,7 +30,7 @@ jobs:
 
       - name: Cosign install
         if: ${{ github.event_name != 'pull_request' }}
-        uses: sigstore/cosign-installer@v3.1.1
+        uses: sigstore/cosign-installer@v3.1.2
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
