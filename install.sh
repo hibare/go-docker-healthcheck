@@ -9,6 +9,7 @@ $this: download go binaries for hibare/go-docker-healthcheck
 Usage: $this [-b] bindir [-d] [tag]
   -b sets bindir or installation directory, Defaults to ./bin
   -d turns on debug logging
+  -v verify signature. Require cosign binary to be installed.
    [tag] is a tag from
    https://github.com/hibare/go-docker-healthcheck/releases
    If tag is missing, then the latest will be used.
@@ -25,10 +26,11 @@ parse_args() {
   # over-ridden by flag below
 
   BINDIR=${BINDIR:-./bin}
-  while getopts "b:dh?x" arg; do
+  while getopts "b:dvh?x" arg; do
     case "$arg" in
       b) BINDIR="$OPTARG" ;;
       d) log_set_priority 10 ;;
+      v) VERIFY_SIGN=true;;
       h | \?) usage "$0" ;;
       x) set -x ;;
     esac
@@ -46,6 +48,13 @@ execute() {
   log_debug "downloading files into ${tmpdir}"
   http_download "${tmpdir}/${TARBALL}" "${TARBALL_URL}"
   http_download "${tmpdir}/${CHECKSUM}" "${CHECKSUM_URL}"
+  
+  if [ "$VERIFY_SIGN" = true ]; then
+    http_download "${tmpdir}/${CHECKSUM}.${CERT_FORMAT}" "${CHECKSUM_URL}.${CERT_FORMAT}"
+    http_download "${tmpdir}/${CHECKSUM}.${SIG_FORMAT}" "${CHECKSUM_URL}.${SIG_FORMAT}"
+    verify_sign "${tmpdir}/${CHECKSUM}" "${tmpdir}/${CHECKSUM}.${CERT_FORMAT}" "${tmpdir}/${CHECKSUM}.${SIG_FORMAT}"
+  fi
+
   hash_sha256_verify "${tmpdir}/${TARBALL}" "${tmpdir}/${CHECKSUM}"
   srcdir="${tmpdir}"
   (cd "${tmpdir}" && untar "${TARBALL}")
@@ -335,6 +344,25 @@ hash_sha256_verify() {
   fi
 }
 
+check_cosign() {
+  if [ "$VERIFY_SIGN" = true ]; then
+    if [ ! -x "$(command -v "$COSIGN_BINARY")" ]; then
+      log_err "Cosign binary is not installed. Follow steps from https://docs.sigstore.dev/system_config/installation/ to install it."
+      return 1
+    fi
+  fi
+}
+
+verify_sign() {
+  log_debug "Verifying artifact $1"
+  cosign verify-blob "$1" \
+  --certificate "$2" \
+  --signature "$3" \
+  --certificate-identity-regexp 'https://github\.com/hibare/go-docker-healthcheck/\.github/workflows/.+' \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" > /dev/null
+  log_debug "Verification success"
+}
+
 cat /dev/null <<EOF
 ------------------------------------------------------------------------
 End of functions from https://github.com/client9/shlib
@@ -349,6 +377,10 @@ FORMAT=tar.gz
 OS=$(uname_os)
 ARCH=$(uname_arch)
 PREFIX="$OWNER/$REPO"
+VERIFY_SIGN=false
+COSIGN_BINARY=cosign
+CERT_FORMAT=pem
+SIG_FORMAT=sig
 
 # use in logging routines
 log_prefix() {
@@ -362,6 +394,8 @@ uname_os_check "$OS"
 uname_arch_check "$ARCH"
 
 parse_args "$@"
+
+check_cosign
 
 get_binary
 
