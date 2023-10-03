@@ -24,6 +24,16 @@ curl -sfL https://raw.githubusercontent.com/hibare/go-docker-healthcheck/main/in
 
 This will install healthcheck in /usr/local/bin
 
+### Verify signature
+
+Installation script provides an way to verify checksum signature before running artifact checksum validation. This is an optional step in installation script.
+
+To run signature verification during installation, supply additional `-v` argument.
+
+```bash
+curl -sfL https://raw.githubusercontent.com/hibare/go-docker-healthcheck/main/install.sh | sh -s -- -d -v -b /usr/local/bin
+```
+
 ### Usage Example
 
 Fetch source code asset from Github release. Compile into a binary.
