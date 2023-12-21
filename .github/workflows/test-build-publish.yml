@@ -1,4 +1,4 @@
-name: Test - Release
+name: Test, Build & Publish
 
 on:
   pull_request:
@@ -8,11 +8,17 @@ on:
     paths-ignore:
       - "**/README.md"
       - "**/.github"
+      - "**/.vscode"
   push:
     tags:
       - "*"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
-  TestRelease:
+  TestPublish:
     permissions:
       contents: write
       id-token: write
