@@ -6,7 +6,7 @@
 [![GitHub](https://img.shields.io/github/license/hibare/go-docker-healthcheck)](https://github.com/hibare/go-docker-healthcheck/blob/main/LICENSE)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/hibare/go-docker-healthcheck)](https://github.com/hibare/go-docker-healthcheck/releases)
 
-Healtch check functionality for Golang Docker images built from scratch.
+Healthcheck functionality for Golang Docker images built from scratch.
 
 Original source: https://medium.com/google-cloud/dockerfile-go-healthchecks-k8s-9a87d5c5b4cb
 
@@ -58,7 +58,7 @@ COPY --from=healthcheck /usr/local/bin/healthcheck /bin/healthcheck
 
 ```
 
-Add heathcheck command to docker. Replace the URL in healthcheck with actual application healthcheck URL.
+Add healthcheck command to docker. Replace the URL in healthcheck with actual application healthcheck URL.
 
 ```
 
