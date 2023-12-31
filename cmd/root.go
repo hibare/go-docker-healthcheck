@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"log/slog"
 	"os"
 	"time"
 
@@ -8,7 +9,6 @@ import (
 	"github.com/hibare/go-docker-healthcheck/internal/constants"
 	"github.com/hibare/go-docker-healthcheck/internal/healthcheck"
 	"github.com/hibare/go-docker-healthcheck/internal/version"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -26,19 +26,17 @@ var rootCmd = &cobra.Command{
 	Version: version.Version,
 	Run: func(cmd *cobra.Command, args []string) {
 		if debugMode {
-			commonLogger.SetLoggingLevel(commonLogger.LogLevelDebug)
-			log.Debug().Msg("Debug mode enabled")
+			debugLevel := commonLogger.LogLevelDebug
+			commonLogger.InitLogger(&debugLevel, nil)
+			slog.Debug("Debug mode enabled")
 		}
 
-		log.Debug().Msgf("URL: %s", url)
-		log.Debug().Msgf("Status codes: %v", statusCodes)
-		log.Debug().Msgf("Timeout %s", timeout)
-		log.Debug().Msg("Running healthcheck")
+		slog.Info("Running healthcheck", "url", url, "statusCodes", statusCodes, "timeout", timeout)
 
 		if healthcheck.Check(url, statusCodes, timeout) {
-			log.Debug().Msg("Healthcheck successful")
+			slog.Debug("Healthcheck successful")
 		} else {
-			log.Debug().Msg("Healthcheck failed")
+			slog.Debug("Healthcheck failed")
 			os.Exit(1)
 		}
 	},
@@ -52,7 +50,7 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(commonLogger.InitLogger)
+	cobra.OnInitialize(commonLogger.InitDefaultLogger)
 	rootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "healthcheck URL")
 	rootCmd.MarkPersistentFlagRequired("url")
 	rootCmd.PersistentFlags().IntSliceVarP(&statusCodes, "status-code", "s", constants.DefaultSuccessStatusCodes, "success status codes")
