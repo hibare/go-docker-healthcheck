@@ -1,8 +1,8 @@
 github.com/cpuguy83/go-md2man/v2 v2.0.4/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/hibare/GoCommon/v2 v2.11.0 h1:FhdaayTGR/54NusOMnD1PC+M4QGErJ31fUoyqcazEfc=
-github.com/hibare/GoCommon/v2 v2.11.0/go.mod h1:ETP8GWUGfE3jNQ8Ru9lgsUj1HlAIHtHWbzSlvFSAOcE=
+github.com/hibare/GoCommon/v2 v2.12.0 h1:REcmiC/JwPFGqc4YXHFsfWQ/ZBmzw1/EJ5ashoAJafY=
+github.com/hibare/GoCommon/v2 v2.12.0/go.mod h1:cL6pb1RNdSCnUl7ifjpOmUKV4ZPfJ6MLDtBaYyHVO6g=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
 github.com/inconshreveable/mousetrap v1.1.0/go.mod h1:vpF70FUmC8bwa3OWnCshd2FqLfsEA9PFc4w1p2J65bw=
 github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 h1:Jamvg5psRIccs7FGNTlIRMkT8wgtp5eCXdBlqhYGL6U=
