@@ -1,3 +1,5 @@
+version: 2
+
 source:
   enabled: false
   name_template: "{{ .ProjectName }}-{{ .Version }}"
@@ -29,7 +31,7 @@ signs:
   - cmd: cosign
     signature: "${artifact}.sig"
     certificate: "${artifact}.pem"
-    args: 
+    args:
       - "sign-blob"
       - "--oidc-issuer=https://token.actions.githubusercontent.com"
       - "--output-certificate=${certificate}"
@@ -37,12 +39,9 @@ signs:
       - "${artifact}"
       - "--yes"
     artifacts: all
-    
+
 checksum:
   name_template: "checksums.txt"
-
-snapshot:
-  name_template: "{{ incpatch .Version }}-next"
 
 changelog:
   sort: asc
