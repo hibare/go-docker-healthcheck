@@ -48,7 +48,7 @@ execute() {
   log_debug "downloading files into ${tmpdir}"
   http_download "${tmpdir}/${TARBALL}" "${TARBALL_URL}"
   http_download "${tmpdir}/${CHECKSUM}" "${CHECKSUM_URL}"
-  
+
   if [ "$VERIFY_SIGN" = true ]; then
     http_download "${tmpdir}/${CHECKSUM}.${CERT_FORMAT}" "${CHECKSUM_URL}.${CERT_FORMAT}"
     http_download "${tmpdir}/${CHECKSUM}.${SIG_FORMAT}" "${CHECKSUM_URL}.${SIG_FORMAT}"

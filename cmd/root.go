@@ -1,3 +1,4 @@
+// Package cmd implements the CLI for the healthcheck application.
 package cmd
 
 import (
@@ -19,12 +20,12 @@ var (
 	timeout     time.Duration
 )
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the base command when called without any subcommands.
 var rootCmd = &cobra.Command{
 	Use:     "healthcheck",
 	Short:   "Healthcheck CLI for docker images build from scratch",
 	Version: version.Version,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		if debugMode {
 			debugLevel := commonLogger.LogLevelDebug
 			commonLogger.InitLogger(&debugLevel, nil)
@@ -42,6 +43,8 @@ var rootCmd = &cobra.Command{
 	},
 }
 
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -52,7 +55,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(commonLogger.InitDefaultLogger)
 	rootCmd.PersistentFlags().StringVarP(&url, "url", "u", "", "healthcheck URL")
-	rootCmd.MarkPersistentFlagRequired("url")
+	_ = rootCmd.MarkPersistentFlagRequired("url")
 	rootCmd.PersistentFlags().IntSliceVarP(&statusCodes, "status-code", "s", constants.DefaultSuccessStatusCodes, "success status codes")
 	rootCmd.PersistentFlags().DurationVarP(&timeout, "timeout", "t", constants.DefaultTimeout, "timeout")
 	rootCmd.PersistentFlags().BoolVarP(&debugMode, "debug", "d", false, "debug mode")
