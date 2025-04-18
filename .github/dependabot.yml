@@ -32,18 +32,3 @@ updates:
       go:
         patterns:
           - "*"
-
-  # Maintain version for Docker
-  - package-ecosystem: "docker"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "00:30"
-    target-branch: "main"
-    assignees:
-      - "hibare"
-    groups:
-      docker:
-        patterns:
-          - "*"
