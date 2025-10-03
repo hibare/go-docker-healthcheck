@@ -5,9 +5,8 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"slices"
 	"time"
-
-	"github.com/hibare/GoCommon/v2/pkg/slice"
 )
 
 // Check performs a health check on the given URL.
@@ -39,7 +38,7 @@ func Check(url string, statusCodes []int, timeout time.Duration) bool {
 		}
 	}()
 
-	if !slice.SliceContains(resp.StatusCode, statusCodes) {
+	if !slices.Contains(statusCodes, resp.StatusCode) {
 		slog.Error("Healthcheck failed", "expected", statusCodes, "received", resp.StatusCode)
 		return false
 	}
