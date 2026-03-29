@@ -187,7 +187,7 @@ uname_arch() {
     armv7*) arch="armv7" ;;
     s390*) arch="s390x" ;;
   esac
-  echo ${arch}
+  echo "${arch}"
 }
 
 uname_os_check() {
