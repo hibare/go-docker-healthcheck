@@ -1,6 +1,6 @@
 module github.com/hibare/go-docker-healthcheck
 
-go 1.25.1
+go 1.27.0
 
 require (
 	github.com/hibare/GoCommon/v2 v2.31.0
