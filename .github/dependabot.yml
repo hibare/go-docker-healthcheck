@@ -1,15 +1,17 @@
+# Managed by Axon; manual edits will be overwritten.
 version: 2
 updates:
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
     cooldown:
-      default-days: 10
+      default-days: 5
     assignees:
       - "hibare"
     groups:
@@ -21,16 +23,16 @@ updates:
   - package-ecosystem: "gomod"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
     cooldown:
-      default-days: 10
+      default-days: 5
     assignees:
       - "hibare"
     allow:
-      # Allow only direct updates for
       - dependency-type: "direct"
     groups:
       go:
@@ -41,12 +43,13 @@ updates:
   - package-ecosystem: "pre-commit"
     directory: "/"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
       day: "friday"
       time: "00:30"
+      timezone: "UTC"
     target-branch: "main"
     cooldown:
-      default-days: 10
+      default-days: 5
     assignees:
       - "hibare"
     groups:
