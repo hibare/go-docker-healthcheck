@@ -1,9 +1,9 @@
 module github.com/hibare/go-docker-healthcheck
 
-go 1.25.1
+go 1.27.3
 
 require (
-	github.com/hibare/GoCommon/v2 v2.31.0
+	github.com/hibare/GoCommon/v2 v2.36.0
 	github.com/spf13/cobra v1.10.2
 )
 
